@@ -140,12 +140,12 @@ export default function FlashDeals() {
             ))}
           </Swiper>
 
-          {/* Corrected Navigation Buttons Positioning */}
-          <button className="swiper-button-prev-custom absolute right-0 md:-right-2 top-1/2 -translate-y-1/2 z-30 bg-white text-black p-2.5 md:p-3 rounded-full shadow-2xl hover:bg-red-600 hover:text-white flex items-center justify-center border border-zinc-200 transition-all active:scale-90">
-            <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
+          {/* Navigation Buttons */}
+          <button className="swiper-button-prev-custom absolute -right-4 md:-right-6 top-1/2 -translate-y-1/2 z-30 bg-white text-black p-2 md:p-2.5 rounded-full shadow-2xl hover:bg-gray-100 flex items-center justify-center border border-zinc-200 transition-all active:scale-90">
+            <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
           </button>
-          <button className="swiper-button-next-custom absolute left-0 md:-left-2 top-1/2 -translate-y-1/2 z-30 bg-white text-black p-2.5 md:p-3 rounded-full shadow-2xl hover:bg-red-600 hover:text-white flex items-center justify-center border border-zinc-200 transition-all active:scale-90">
-            <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
+          <button className="swiper-button-next-custom absolute -left-4 md:-left-6 top-1/2 -translate-y-1/2 z-30 bg-white text-black p-2 md:p-2.5 rounded-full shadow-2xl hover:bg-gray-100 flex items-center justify-center border border-zinc-200 transition-all active:scale-90">
+            <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
           </button>
         </div>
       </div>

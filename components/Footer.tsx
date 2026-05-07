@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="font-bold text-xl mb-4 text-[#FF8C00]">TIX</h3>
+            <h3 className="font-bold text-xl mb-4 text-white">TIX</h3>
             <p className="text-sm text-gray-400 mb-4 leading-relaxed">
               منصة TIX هي وجهتك المثالية للتسوق الإلكتروني في مصر. نقدم لك أفضل المنتجات بأفضل الأسعار مع خدمة توصيل سريعة وموثوقة.
             </p>
@@ -77,16 +77,16 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold mb-4">تابعنا</h4>
             <div className="flex gap-4">
-              <a href="#" className="hover:text-[#FF8C00] transition-colors">
+              <a href="#" className="hover:text-[#22c55e] transition-colors">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="hover:text-[#FF8C00] transition-colors">
+              <a href="#" className="hover:text-[#1d9bf0] transition-colors">
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href="#" className="hover:text-[#FF8C00] transition-colors">
+              <a href="#" className="hover:text-[#e1306c] transition-colors">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="#" className="hover:text-[#FF8C00] transition-colors">
+              <a href="#" className="hover:text-[#ff0000] transition-colors">
                 <Youtube className="h-5 w-5" />
               </a>
             </div>

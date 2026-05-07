@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import ProductGrid from "@/components/ProductGrid";
-import { Percent } from "lucide-react";
+import { BadgePercent } from "lucide-react";
 import api from "@/lib/api";
 import type { ProductCardProps } from "@/utils/Types/products";
 
@@ -40,13 +40,17 @@ export default function OffersPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 md:py-10">
-      <div className="flex items-center gap-3 mb-8">
-        <div className="bg-error/10 p-2.5 rounded-xl">
-          <Percent className="w-6 h-6 text-error" />
-        </div>
-        <div>
-          <h1 className="section-title">العروض والخصومات</h1>
-          <p className="text-text-muted text-sm">أفضل العروض والخصومات المتاحة الآن</p>
+      <div className="rounded-2xl border border-divider bg-gradient-to-l from-dark to-dark-light text-white p-6 md:p-8 mb-8 overflow-hidden">
+        <div className="flex items-start gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center flex-shrink-0">
+            <BadgePercent className="w-6 h-6 text-error" />
+          </div>
+          <div className="min-w-0">
+            <h1 className="text-3xl md:text-4xl font-bold leading-tight">العروض والخصومات</h1>
+            <p className="text-gray-200 mt-2 text-sm md:text-base">
+              أفضل العروض والخصومات المتاحة الآن
+            </p>
+          </div>
         </div>
       </div>
       {loading ? (

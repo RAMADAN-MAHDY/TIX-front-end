@@ -160,10 +160,10 @@ function ProductsContent() {
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col lg:flex-row gap-8">
+        <div className="container mx-auto px-4 py-6 md:py-8">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
             {/* Sidebar Filters */}
-            <aside className={`lg:w-72 flex-shrink-0 ${filtersOpen ? 'fixed inset-0 z-50 bg-white p-6 overflow-y-auto lg:static lg:bg-transparent lg:p-0' : 'hidden lg:block'}`}>
+            <aside className={`lg:w-72 flex-shrink-0 ${filtersOpen ? 'fixed inset-0 z-50 bg-white p-4 sm:p-6 overflow-y-auto lg:static lg:bg-transparent lg:p-0' : 'hidden lg:block'}`}>
               <div className="lg:sticky lg:top-24 space-y-6">
                 <div className="flex items-center justify-between mb-4 lg:mb-0">
                   <h3 className="font-bold text-lg">تصفية النتائج</h3>
@@ -259,13 +259,13 @@ function ProductsContent() {
             {/* Products Main Section */}
             <div className="flex-1">
               {/* Sort & View Options Bar */}
-              <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6 flex items-center justify-between shadow-sm">
-                <div className="flex items-center gap-3">
+              <div className="bg-white rounded-xl border border-gray-200 p-3 sm:p-4 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-sm">
+                <div className="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
                   <span className="text-sm text-gray-500 hidden sm:inline">الترتيب:</span>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="text-sm font-semibold border-none bg-transparent focus:ring-0 cursor-pointer outline-none"
+                    className="text-sm font-semibold border-none bg-transparent focus:ring-0 cursor-pointer outline-none w-full sm:w-auto"
                   >
                     <option value="newest">الأحدث أولاً</option>
                     <option value="price_low">السعر: من الأقل</option>
@@ -274,7 +274,7 @@ function ProductsContent() {
                   </select>
                 </div>
 
-                <div className="flex items-center gap-2 border-r pr-4 mr-2">
+                <div className="flex items-center justify-end gap-2 sm:border-r sm:pr-4 sm:mr-2">
                   <button
                     onClick={() => setViewType('grid')}
                     className={`p-2 rounded-lg transition-all ${viewType === 'grid' ? 'bg-red-600 text-white shadow-md' : 'text-gray-400 hover:bg-gray-100'}`}
@@ -311,17 +311,18 @@ function ProductsContent() {
                 </div>
               ) : products.length > 0 ? (
                 /* Products Grid/List */
-                <div className={`grid ${viewType === 'grid' ? 'grid-cols-2 md:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'} gap-4`}>
+                <div className={`grid ${viewType === 'grid' ? 'grid-cols-2 md:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'} gap-3 sm:gap-4`}>
                   {products.map((product) => (
                     <Link
                       key={product.id}
                       href={`/product/${product.id}`}
-                      className={`group bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 relative ${viewType === 'list' ? 'flex items-center gap-6' : ''
+                      className={`group bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 relative ${viewType === 'list' ? 'flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6' : ''
                         }`}
                     >
                       {/* Image */}
                       <div className={`relative overflow-hidden bg-gray-50 ${viewType === 'list' ? 'w-48 h-48 sm:w-60 sm:h-60 flex-shrink-0' : 'w-full aspect-square'
-                        }`}>
+                        } ${viewType === 'list' ? 'w-full h-52 sm:w-60 sm:h-60' : ''}
+                      `}>
                         <Image
                           src={product.image}
                           alt={product.name}
@@ -336,7 +337,7 @@ function ProductsContent() {
                       </div>
 
                       {/* Content */}
-                      <div className="p-4 flex-1 flex flex-col justify-between">
+                      <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between">
                         <div>
                           <h3 className="font-bold text-sm text-gray-800 line-clamp-2 mb-2 group-hover:text-red-600 transition-colors">
                             {t(product.name)}
@@ -387,14 +388,14 @@ function ProductsContent() {
 
               {/* Pagination Placeholder (matches style) */}
               {products.length > 0 && !loading && (
-                <div className="flex items-center justify-center gap-2 mt-12 pb-10">
-                  <button className="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 disabled:opacity-50">
+                <div className="flex items-center justify-center gap-1.5 sm:gap-2 mt-10 sm:mt-12 pb-8 sm:pb-10">
+                  <button className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 disabled:opacity-50">
                     <ChevronDown className="w-5 h-5 rotate-90" />
                   </button>
-                  <button className="w-10 h-10 rounded-xl bg-red-600 text-white font-bold shadow-lg shadow-red-200">1</button>
-                  <button className="w-10 h-10 rounded-xl border border-gray-200 font-bold hover:bg-gray-50">2</button>
-                  <button className="w-10 h-10 rounded-xl border border-gray-200 font-bold hover:bg-gray-50">3</button>
-                  <button className="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50">
+                  <button className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-red-600 text-white font-bold shadow-lg shadow-red-200">1</button>
+                  <button className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-gray-200 font-bold hover:bg-gray-50">2</button>
+                  <button className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-gray-200 font-bold hover:bg-gray-50">3</button>
+                  <button className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50">
                     <ChevronDown className="w-5 h-5 -rotate-90" />
                   </button>
                 </div>

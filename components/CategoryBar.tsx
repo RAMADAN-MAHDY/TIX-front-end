@@ -1,8 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import api from "@/lib/api";
 import type { CategoryNavItem } from "@/utils/Types/navigation";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const fallbackCategories: CategoryNavItem[] = [
   { id: "1", name: "الإلكترونيات", slug: "electronics" },
@@ -21,6 +22,7 @@ const fallbackCategories: CategoryNavItem[] = [
 
 export default function CategoryBar() {
   const [categories, setCategories] = useState<CategoryNavItem[]>(fallbackCategories);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function fetchCategories() {
@@ -41,18 +43,48 @@ export default function CategoryBar() {
     fetchCategories();
   }, []);
 
+  const scrollCategories = (direction: "next" | "prev") => {
+    if (!scrollRef.current) return;
+    const isRtl = getComputedStyle(scrollRef.current).direction === "rtl";
+    const step = 220;
+    const delta = direction === "next" ? step : -step;
+    scrollRef.current.scrollBy({
+      left: isRtl ? -delta : delta,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <section className="bg-muted/30 border-b border-gray-100">
-      <div className="container mx-auto px-4">
-        <div className="flex gap-6 overflow-x-auto py-3 scrollbar-hide">
-          <Link href="/offers" className="text-sm font-bold whitespace-nowrap text-primary hover:text-primary/80 transition-colors">
+      <div className="container mx-auto px-4 relative">
+        <button
+          type="button"
+          onClick={() => scrollCategories("prev")}
+          aria-label="تمرير الأقسام لليمين"
+          className="hidden lg:flex items-center justify-center absolute -right-6 top-1/2 -translate-y-1/2 z-10 text-gray-400 transition-colors"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </button>
+        <button
+          type="button"
+          onClick={() => scrollCategories("next")}
+          aria-label="تمرير الأقسام لليسار"
+          className="hidden lg:flex items-center justify-center absolute -left-6 top-1/2 -translate-y-1/2 z-10 text-gray-400 transition-colors"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </button>
+        <div ref={scrollRef} className="flex items-center gap-5 overflow-x-auto py-3 scrollbar-hide">
+          <Link
+            href="/offers"
+            className="relative text-sm font-bold whitespace-nowrap text-error pb-1 transition-colors after:content-[''] after:absolute after:right-0 after:bottom-0 after:h-0.5 after:w-full after:bg-error"
+          >
             عروضنا
           </Link>
           {categories.map((category) => (
             <Link
               key={category.id}
               href={`/products?category=${category.slug || category.id}`}
-              className="text-sm font-medium whitespace-nowrap text-gray-700 hover:text-primary transition-colors"
+              className="relative text-sm font-medium whitespace-nowrap text-gray-600 hover:text-black focus-visible:text-black active:text-black transition-colors pb-1 after:content-[''] after:absolute after:right-0 after:bottom-0 after:h-0.5 after:w-0 after:bg-black after:transition-all after:duration-300 after:ease-out hover:after:w-full"
             >
               {category.name}
             </Link>
