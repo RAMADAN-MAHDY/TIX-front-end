@@ -222,12 +222,12 @@ export default function ProductDetailClient({ productId }: { productId: string }
             {/* Left Column - Image Gallery */}
             <div className="lg:col-span-2 flex flex-col">
               <div className="bg-gray-50 rounded-lg overflow-hidden mb-4 flex-shrink-0">
-                <div className="w-full aspect-square flex items-center justify-center relative">
+                <div className="w-full aspect-[4/5] lg:aspect-square flex items-center justify-center relative">
                   <Image
                     src={images[selectedImageIdx]}
                     alt={t(product.name)}
                     fill
-                    className="object-contain p-4"
+                    className="object-contain"
                   />
                 </div>
               </div>

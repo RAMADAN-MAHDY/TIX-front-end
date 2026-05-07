@@ -38,16 +38,16 @@ function LoginForm() {
   }
 
   return (
-    <div className="card p-6 md:p-8">
+    <div className="bg-white rounded-lg border border-border p-8">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label className="text-sm font-medium mb-1.5 block">البريد الإلكتروني</label>
+          <label className="block text-sm font-semibold mb-2">البريد الإلكتروني</label>
           <div className="relative">
             <input
               type="email"
               {...register('email')}
               placeholder="email@example.com"
-              className="input-field pr-4 pl-10"
+              className="input-field text-sm pr-4 pl-10 focus:border-dark focus:shadow-none"
               dir="ltr"
             />
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-faint" />
@@ -56,13 +56,13 @@ function LoginForm() {
         </div>
 
         <div>
-          <label className="text-sm font-medium mb-1.5 block">كلمة المرور</label>
+          <label className="block text-sm font-semibold mb-2">كلمة المرور</label>
           <div className="relative">
             <input
               type={showPassword ? 'text' : 'password'}
               {...register('password')}
               placeholder="••••••••"
-              className="input-field pr-10 pl-10"
+              className="input-field text-sm pr-10 pl-10 focus:border-dark focus:shadow-none"
               dir="ltr"
             />
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-faint" />
@@ -79,10 +79,10 @@ function LoginForm() {
 
         <div className="flex items-center justify-between text-sm">
           <label className="flex items-center gap-2 text-text-muted cursor-pointer">
-            <input type="checkbox" className="w-4 h-4 rounded accent-primary" />
+            <input type="checkbox" className="w-4 h-4 rounded accent-dark" />
             تذكرني
           </label>
-          <Link href="/forgot-password" className="text-primary hover:underline text-sm">
+          <Link href="/forgot-password" className="text-sm text-dark hover:underline">
             نسيت كلمة المرور؟
           </Link>
         </div>
@@ -90,7 +90,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="btn-primary w-full !py-3.5 flex items-center justify-center gap-2"
+          className="w-full h-11 rounded-lg bg-dark text-white hover:bg-dark-light transition-colors font-semibold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? (
             <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full" />
@@ -103,38 +103,43 @@ function LoginForm() {
         </button>
       </form>
 
-      <div className="relative my-6">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-divider" />
-        </div>
-        <div className="relative flex justify-center">
-          <span className="bg-surface px-4 text-sm text-text-muted">أو</span>
-        </div>
+      <div className="flex items-center gap-4 my-6">
+        <div className="flex-1 h-px bg-divider" />
+        <span className="text-xs text-text-muted">أو</span>
+        <div className="flex-1 h-px bg-divider" />
       </div>
 
-      <Link
-        href="/register"
-        className="btn-outline w-full text-center flex items-center justify-center gap-2 !py-3"
-      >
-        <UserPlus className="w-5 h-5" />
-        إنشاء حساب جديد
-      </Link>
+      <p className="text-center text-text-muted mt-8">
+        ليس لديك حساب؟{' '}
+        <Link href="/register" className="text-dark hover:underline font-semibold inline-flex items-center gap-2">
+          <UserPlus className="w-4 h-4" />
+          إنشاء حساب جديد
+        </Link>
+      </p>
     </div>
   )
 }
 
 export default function LoginPage() {
   return (
-    <div className="min-h-[80vh] flex items-center justify-center py-12 px-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-primary mb-2">TIX</h1>
-          <p className="text-text-muted">سجّل الدخول لحسابك</p>
+    <div className="flex flex-col min-h-screen bg-bg" dir="rtl">
+      <main className="flex-1 flex items-center justify-center py-16 px-4">
+        <div className="w-full max-w-md">
+          {/* Logo */}
+          <div className="flex justify-center mb-8">
+            <div className="bg-dark rounded-full p-3 w-16 h-16 flex items-center justify-center">
+              <span className="text-white font-bold text-2xl">TIX</span>
+            </div>
+          </div>
+
+          <h1 className="text-3xl font-bold text-center mb-2">تسجيل الدخول</h1>
+          <p className="text-center text-text-muted mb-6">أدخل بيانات حسابك للمتابعة</p>
+
+          <Suspense fallback={<div className="skeleton h-96 rounded-xl" />}>
+            <LoginForm />
+          </Suspense>
         </div>
-        <Suspense fallback={<div className="skeleton h-96 rounded-xl" />}>
-          <LoginForm />
-        </Suspense>
-      </div>
+      </main>
     </div>
   )
 }

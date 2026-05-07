@@ -88,15 +88,28 @@ export default function Header() {
             <span className="text-2xl font-bold text-black">TIX</span>
           </Link>
 
+          {/* Desktop Nav beside logo */}
+          <nav className="hidden lg:flex items-center gap-1 flex-shrink-0">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="relative px-3 py-2 text-sm font-medium text-gray-700 hover:text-black transition-colors after:content-[''] after:absolute after:right-0 after:bottom-0 after:h-0.5 after:w-0 after:bg-black after:transition-all after:duration-300 after:ease-out hover:after:w-full"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
           {/* Search Bar in the middle */}
-          <div ref={searchRef} className="hidden md:flex flex-1 max-w-2xl relative">
+          <div ref={searchRef} className="hidden md:flex flex-1 max-w-xl relative">
             <div className="relative w-full">
               <Input
                 type="search"
                 placeholder="ابحث عن منتجات..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white border border-gray-400 text-black placeholder:text-gray-500 pr-10"
+                className="w-full bg-white border border-gray-400 text-black placeholder:text-gray-500 pr-10 focus-visible:border-black focus-visible:ring-0"
               />
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-600" />
             </div>
@@ -199,24 +212,11 @@ export default function Header() {
               placeholder="ابحث عن منتجات..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white border border-gray-300"
+              className="w-full bg-white border border-gray-300 focus-visible:border-black focus-visible:ring-0"
             />
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
           </div>
         </div>
-
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-1 py-2 border-t border-gray-100">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary transition-colors border-b-2 border-transparent hover:border-primary"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
@@ -236,7 +236,7 @@ export default function Header() {
                 <Link
                   href="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="mx-4 mt-4 bg-primary text-white text-center py-3 rounded-lg font-bold"
+                  className="mx-4 mt-4 bg-black text-white text-center py-3 rounded-lg font-bold hover:bg-gray-900 transition-colors"
                 >
                   تسجيل الدخول
                 </Link>
