@@ -8,6 +8,8 @@ import { useAuth } from "@/context/AuthContext";
 import { formatCurrency, calculateDiscount, t } from "@/utils/helpers";
 import { toast } from "react-toastify";
 import type { ProductCardProps } from "@/utils/Types/products";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function ProductCard({
   id,
@@ -57,133 +59,57 @@ export default function ProductCard({
   };
 
   return (
-    <div
-      className="group"
-      style={{
-        backgroundColor: "#FFFFFF",
-        border: "1px solid #E0E0E0",
-        borderRadius: 8,
-        padding: 16,
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        transition: "all 0.3s ease-in-out",
-      }}
-      onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.15)")}
-      onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.1)")}
-    >
-      {/* Image */}
-      <Link
-        href={`/product/${id}`}
-        className="block relative overflow-hidden"
-        style={{ height: 200, borderRadius: 4, marginBottom: 12 }}
-      >
-        <Image
-          src={image || "/pl1.jpg"}
-          alt={productName}
-          fill
-          className="object-cover group-hover:scale-105"
-          style={{ transition: "transform 0.3s ease-in-out" }}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 25vw"
-          loading="lazy"
-        />
-        {/* Discount Badge */}
-        {discountPct > 0 && (
-          <span
-            className="absolute top-2 right-2"
-            style={{
-              backgroundColor: "#FF8C00",
-              color: "#FFFFFF",
-              fontSize: 12,
-              padding: "4px 8px",
-              borderRadius: 4,
-              fontWeight: 700,
-            }}
-          >
-            -{discountPct}%
-          </span>
-        )}
-        {/* Wishlist Button */}
-        <button
-          onClick={handleToggleWishlist}
-          aria-label="أضف للمفضلة"
-          className="absolute top-2 left-2 flex items-center justify-center"
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: "50%",
-            backgroundColor: "rgba(255,255,255,0.9)",
-            border: "none",
-            cursor: "pointer",
-            transition: "transform 0.2s",
-            color: wishlisted ? "#F44336" : "#999999",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-        >
-          <Heart className="w-4 h-4" fill={wishlisted ? "currentColor" : "none"} />
-        </button>
-      </Link>
-
-      {/* Details */}
-      <div>
-        <Link href={`/product/${id}`}>
-          <h3
-            className="line-clamp-2"
-            style={{
-              fontSize: 16,
-              fontWeight: 600,
-              color: "#212121",
-              marginBottom: 8,
-              minHeight: 40,
-              transition: "color 0.2s",
-              cursor: "pointer",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "#FF8C00")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "#212121")}
-          >
-            {productName}
-          </h3>
-        </Link>
-
-        {/* Rating */}
-        {rating !== undefined && rating > 0 && (
-          <div className="flex items-center gap-1.5" style={{ marginBottom: 8 }}>
-            <Star className="w-4 h-4" style={{ color: "#FF8C00", fill: "#FF8C00" }} />
-            <span style={{ fontSize: 12, color: "#666666", fontWeight: 500 }}>{rating}</span>
-            {reviewsCount !== undefined && (
-              <span style={{ fontSize: 12, color: "#999999" }}>({reviewsCount})</span>
-            )}
-          </div>
-        )}
-
-        {/* Price */}
-        <div className="flex items-center gap-2" style={{ marginBottom: 12 }}>
-          <span style={{ fontSize: 18, fontWeight: 700, color: "#FF8C00" }}>
-            {formatCurrency(price)}
-          </span>
-          {originalPrice && originalPrice > price && (
-            <span
-              style={{
-                fontSize: 14,
-                color: "#999999",
-                textDecoration: "line-through",
-                marginRight: 8,
-              }}
-            >
-              {formatCurrency(originalPrice)}
+    <Link href={`/product/${id}`} className="block h-full">
+      <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer h-full border border-gray-200 py-0 gap-0">
+        <div className="relative h-40 w-full bg-gray-50">
+          <Image
+            src={image || "/pl1.jpg"}
+            alt={productName}
+            fill
+            className="object-contain p-2"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 25vw"
+          />
+          {discountPct > 0 && (
+            <span className="absolute top-2 right-2 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
+              {discountPct}%
             </span>
           )}
+          <button
+            onClick={handleToggleWishlist}
+            className="absolute top-2 left-2 p-1 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors z-10 shadow-sm"
+          >
+            <Heart className={`w-3.5 h-3.5 ${wishlisted ? "fill-red-500 text-red-500" : "text-gray-400"}`} />
+          </button>
         </div>
-
-        {/* Add to Cart */}
-        <button
-          onClick={handleAddToCart}
-          className="w-full flex items-center justify-center gap-2 btn-primary"
-          style={{ padding: "8px 12px", fontSize: 14 }}
-        >
-          <ShoppingCart className="w-4 h-4" />
-          أضف للسلة
-        </button>
-      </div>
-    </div>
+        <div className="p-3 flex flex-col flex-1">
+          <h3 className="font-medium text-[13px] mb-1.5 line-clamp-2 text-gray-800 h-9 leading-tight">{productName}</h3>
+          <div className="flex items-center gap-1 mb-2">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Star
+                key={i}
+                className={`h-2.5 w-2.5 ${
+                  i < (rating || 0) ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"
+                }`}
+              />
+            ))}
+          </div>
+          <div className="mt-auto">
+            <div className="flex items-center gap-2 mb-2.5">
+              <span className="text-red-600 font-bold text-sm">{formatCurrency(price)}</span>
+              {originalPrice && originalPrice > price && (
+                <span className="text-gray-400 line-through text-[10px]">{formatCurrency(originalPrice)}</span>
+              )}
+            </div>
+            <Button
+              onClick={handleAddToCart}
+              className="w-full text-[11px] h-8 bg-black hover:bg-gray-800 text-white rounded-md"
+            >
+              <ShoppingCart className="w-3 h-3 mr-1" />
+              أضف للسلة
+            </Button>
+          </div>
+        </div>
+      </Card>
+    </Link>
   );
 }

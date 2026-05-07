@@ -9,6 +9,8 @@ import {
   ChevronDown, LogOut, Package, UserCircle
 } from 'lucide-react'
 import api from '@/lib/api'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -78,62 +80,42 @@ export default function Header() {
   ]
 
   return (
-    <header
-      className="sticky top-0 z-[1000]"
-      style={{ backgroundColor: '#000000', borderBottom: '2px solid #FF8C00' }}
-    >
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 20px' }}>
-        {/* Main Row */}
-        <div className="flex items-center justify-between gap-4" style={{ height: 70, padding: '10px 0' }}>
-          {/* Logo */}
-          <Link href="/" className="flex-shrink-0">
-            <span style={{ color: '#FF8C00', fontSize: 24, fontWeight: 700 }}>TIX</span>
+    <header className="bg-white text-black border-b border-gray-200 sticky top-0 z-[1000]">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between py-4 gap-4">
+          {/* Logo on the left */}
+          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+            <span className="text-2xl font-bold text-black">TIX</span>
           </Link>
 
-          {/* Search Bar - Desktop */}
-          <div ref={searchRef} className="hidden md:flex flex-1 relative" style={{ maxWidth: 300, margin: '0 30px' }}>
+          {/* Search Bar in the middle */}
+          <div ref={searchRef} className="hidden md:flex flex-1 max-w-2xl relative">
             <div className="relative w-full">
-              <input
-                type="text"
+              <Input
+                type="search"
                 placeholder="ابحث عن منتجات..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  width: '100%',
-                  height: 44,
-                  backgroundColor: '#1a1a1a',
-                  border: '2px solid #FF8C00',
-                  color: '#FFFFFF',
-                  padding: '10px 15px 10px 40px',
-                  borderRadius: 8,
-                  fontSize: 14,
-                  outline: 'none',
-                }}
+                className="w-full bg-white border border-gray-400 text-black placeholder:text-gray-500 pr-10"
               />
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: '#999999' }} />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-600" />
             </div>
             {/* Search Results Dropdown */}
             {showSearchResults && searchQuery && (
-              <div
-                className="absolute top-full mt-2 w-full max-h-80 overflow-y-auto z-50 animate-slide-down"
-                style={{ backgroundColor: '#FFFFFF', borderRadius: 8, boxShadow: '0 4px 16px rgba(0,0,0,0.15)', border: '1px solid #E0E0E0' }}
-              >
+              <div className="absolute top-full mt-2 w-full max-h-80 overflow-y-auto z-50 bg-white border border-gray-200 rounded-lg shadow-lg">
                 {searchResults.length > 0 ? (
                   searchResults.map((item: any) => (
                     <button
                       key={item.id}
                       onClick={() => handleSearchSelect(item.id)}
-                      className="w-full text-right px-4 py-3 flex items-center gap-3"
-                      style={{ borderBottom: '1px solid #E0E0E0', transition: 'background 0.2s' }}
-                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#F5F5F5')}
-                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#FFFFFF')}
+                      className="w-full text-right px-4 py-3 flex items-center gap-3 hover:bg-gray-100 transition-colors border-b border-gray-100 last:border-0"
                     >
-                      <Search className="w-4 h-4 flex-shrink-0" style={{ color: '#999999' }} />
-                      <span style={{ fontSize: 14, color: '#212121' }} className="truncate">{item.name}</span>
+                      <Search className="w-4 h-4 flex-shrink-0 text-gray-400" />
+                      <span className="text-sm text-gray-900 truncate">{item.name}</span>
                     </button>
                   ))
                 ) : (
-                  <div className="px-4 py-6 text-center" style={{ color: '#666666', fontSize: 14 }}>
+                  <div className="px-4 py-6 text-center text-sm text-gray-500">
                     لا توجد نتائج
                   </div>
                 )}
@@ -141,113 +123,68 @@ export default function Header() {
             )}
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2">
-            {/* Wishlist */}
-            <Link
-              href="/account/wishlist"
-              className="p-2 rounded-md"
-              style={{ color: '#FFFFFF', transition: 'color 0.2s' }}
-              aria-label="المفضلة"
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#FF8C00')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#FFFFFF')}
-            >
-              <Heart className="w-5 h-5 md:w-6 md:h-6" />
-            </Link>
-
-            {/* Cart */}
-            <Link
-              href="/cart"
-              className="relative p-2 rounded-md"
-              style={{ color: '#FFFFFF', transition: 'color 0.2s' }}
-              aria-label="السلة"
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#FF8C00')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#FFFFFF')}
-            >
-              <ShoppingCart className="w-5 h-5 md:w-6 md:h-6" />
-              {cartState.count > 0 && (
-                <span
-                  className="absolute -top-0.5 -left-0.5 min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-1"
-                  style={{ backgroundColor: '#FF8C00', color: '#FFFFFF', fontSize: 10, fontWeight: 700 }}
-                >
-                  {cartState.count > 99 ? '99+' : cartState.count}
-                </span>
-              )}
-            </Link>
-
-            {/* User Menu */}
+          {/* Right side icons */}
+          <div className="flex items-center gap-4 flex-shrink-0">
             {authState.isAuthenticated ? (
               <div ref={userMenuRef} className="relative">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="p-2 rounded-md flex items-center gap-1"
-                  style={{ color: '#FFFFFF', transition: 'color 0.2s' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#FF8C00')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = '#FFFFFF')}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
                 >
-                  <User className="w-5 h-5 md:w-6 md:h-6" />
-                  <ChevronDown className="w-3 h-3 hidden md:block" />
+                  <User className="h-5 w-5" />
+                  <span className="text-sm font-semibold hidden sm:inline">{authState.user?.name}</span>
+                  <ChevronDown className="h-4 w-4 hidden md:block" />
                 </button>
                 {userMenuOpen && (
-                  <div
-                    className="absolute left-0 top-full mt-2 w-52 overflow-hidden animate-slide-down z-50"
-                    style={{ backgroundColor: '#FFFFFF', borderRadius: 8, boxShadow: '0 4px 16px rgba(0,0,0,0.15)', border: '1px solid #E0E0E0' }}
-                  >
-                    <div className="px-4 py-3" style={{ borderBottom: '1px solid #E0E0E0' }}>
-                      <p style={{ fontSize: 14, fontWeight: 600, color: '#212121' }} className="truncate">
-                        {authState.user?.name}
-                      </p>
-                      <p style={{ fontSize: 12, color: '#666666' }} className="truncate" dir="ltr">
-                        {authState.user?.email}
-                      </p>
+                  <div className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-48 overflow-hidden">
+                    <div className="px-4 py-3 border-b border-gray-100">
+                      <p className="text-sm font-semibold text-gray-900 truncate">{authState.user?.name}</p>
+                      <p className="text-xs text-gray-500 truncate" dir="ltr">{authState.user?.email}</p>
                     </div>
-                    <Link
-                      href="/account"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3"
-                      style={{ fontSize: 14, color: '#212121', transition: 'background 0.2s' }}
-                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#F5F5F5')}
-                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-                    >
-                      <UserCircle className="w-4 h-4" />
+                    <Link href="/account" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100">
+                      <UserCircle className="h-4 w-4" />
                       حسابي
                     </Link>
-                    <Link
-                      href="/account/orders"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3"
-                      style={{ fontSize: 14, color: '#212121', transition: 'background 0.2s' }}
-                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#F5F5F5')}
-                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-                    >
-                      <Package className="w-4 h-4" />
+                    <Link href="/account/orders" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100">
+                      <Package className="h-4 w-4" />
                       طلباتي
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="flex items-center gap-3 w-full px-4 py-3"
-                      style={{ fontSize: 14, color: '#F44336', borderTop: '1px solid #E0E0E0', transition: 'background 0.2s' }}
-                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#FFF5F5')}
-                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                      className="w-full text-right px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2 text-red-500 border-top border-gray-100"
                     >
-                      <LogOut className="w-4 h-4" />
+                      <LogOut className="h-4 w-4" />
                       تسجيل الخروج
                     </button>
                   </div>
                 )}
               </div>
             ) : (
-              <Link href="/login" className="btn-primary hidden md:flex" style={{ padding: '8px 16px', fontSize: 14 }}>
-                تسجيل الدخول
+              <Link href="/login">
+                <Button variant="ghost" size="icon" className="text-black hover:bg-gray-100">
+                  <User className="h-5 w-5" />
+                </Button>
               </Link>
             )}
-
+            <Link href="/account/wishlist">
+              <Button variant="ghost" size="icon" className="text-black hover:bg-gray-100">
+                <Heart className="h-5 w-5" />
+              </Button>
+            </Link>
+            <Link href="/cart">
+              <Button variant="ghost" size="icon" className="text-black hover:bg-gray-100 relative">
+                <ShoppingCart className="h-5 w-5" />
+                {cartState.count > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                    {cartState.count > 99 ? '99+' : cartState.count}
+                  </span>
+                )}
+              </Button>
+            </Link>
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-md"
-              style={{ color: '#FFFFFF' }}
-              aria-label="القائمة"
+              className="md:hidden p-2 rounded-md hover:bg-gray-100"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -255,50 +192,26 @@ export default function Header() {
         </div>
 
         {/* Mobile Search */}
-        <div className="md:hidden" style={{ paddingBottom: 10 }}>
-          <input
-            type="text"
-            placeholder="ابحث عن منتجات..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{
-              width: '100%',
-              height: 40,
-              backgroundColor: '#1a1a1a',
-              border: '2px solid #FF8C00',
-              color: '#FFFFFF',
-              padding: '8px 15px',
-              borderRadius: 8,
-              fontSize: 14,
-              outline: 'none',
-            }}
-          />
+        <div className="md:hidden pb-4">
+          <div className="relative">
+            <Input
+              type="search"
+              placeholder="ابحث عن منتجات..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-white border border-gray-300"
+            />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+          </div>
         </div>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-0" style={{ borderTop: '1px solid rgba(255,255,255,0.1)', padding: '8px 0' }}>
+        <nav className="hidden md:flex items-center gap-1 py-2 border-t border-gray-100">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="nav-link"
-              style={{
-                color: '#FFFFFF',
-                fontSize: 14,
-                fontWeight: 500,
-                padding: '6px 15px',
-                textDecoration: 'none',
-                transition: 'color 0.2s',
-                borderBottom: '2px solid transparent',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = '#FF8C00'
-                e.currentTarget.style.borderBottomColor = '#FF8C00'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = '#FFFFFF'
-                e.currentTarget.style.borderBottomColor = 'transparent'
-              }}
+              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary transition-colors border-b-2 border-transparent hover:border-primary"
             >
               {link.label}
             </Link>
@@ -307,28 +220,14 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <nav className="md:hidden animate-slide-down" style={{ borderTop: '1px solid rgba(255,255,255,0.1)', padding: '16px 0' }}>
+          <nav className="md:hidden border-t border-gray-100 py-4 animate-in slide-in-from-top duration-300">
             <div className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-md"
-                  style={{
-                    padding: '12px 16px',
-                    color: '#FFFFFF',
-                    fontWeight: 500,
-                    transition: 'all 0.2s',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = '#FF8C00'
-                    e.currentTarget.style.backgroundColor = 'rgba(255,140,0,0.1)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = '#FFFFFF'
-                    e.currentTarget.style.backgroundColor = 'transparent'
-                  }}
+                  className="px-4 py-3 text-base font-medium text-gray-800 hover:bg-gray-50 rounded-lg"
                 >
                   {link.label}
                 </Link>
@@ -337,30 +236,10 @@ export default function Header() {
                 <Link
                   href="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="btn-primary text-center"
-                  style={{ marginTop: 12, padding: '10px 16px' }}
+                  className="mx-4 mt-4 bg-primary text-white text-center py-3 rounded-lg font-bold"
                 >
                   تسجيل الدخول
                 </Link>
-              )}
-              {authState.isAuthenticated && (
-                <>
-                  <Link
-                    href="/account"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="rounded-md"
-                    style={{ padding: '12px 16px', color: '#FFFFFF', fontWeight: 500 }}
-                  >
-                    حسابي
-                  </Link>
-                  <button
-                    onClick={() => { handleLogout(); setMobileMenuOpen(false) }}
-                    className="rounded-md text-right"
-                    style={{ padding: '12px 16px', color: '#F44336', fontWeight: 500 }}
-                  >
-                    تسجيل الخروج
-                  </button>
-                </>
               )}
             </div>
           </nav>

@@ -1,40 +1,23 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  Smartphone,
-  Shirt,
-  Sparkles,
-  Watch,
-  ShoppingBag,
-  Dumbbell,
-  Gamepad2,
-  Footprints,
-} from "lucide-react";
 import api from "@/lib/api";
 import type { CategoryNavItem } from "@/utils/Types/navigation";
 
 const fallbackCategories: CategoryNavItem[] = [
-  { id: "1", name: "إلكترونيات", icon: Smartphone, slug: "electronics" },
-  { id: "2", name: "ملابس", icon: Shirt, slug: "clothing" },
-  { id: "3", name: "مستحضرات تجميل", icon: Sparkles, slug: "beauty" },
-  { id: "4", name: "ساعات", icon: Watch, slug: "watches" },
-  { id: "5", name: "حقائب", icon: ShoppingBag, slug: "bags" },
-  { id: "6", name: "رياضة", icon: Dumbbell, slug: "sports" },
-  { id: "7", name: "ألعاب", icon: Gamepad2, slug: "toys" },
-  { id: "8", name: "أحذية", icon: Footprints, slug: "shoes" },
+  { id: "1", name: "الإلكترونيات", slug: "electronics" },
+  { id: "2", name: "الأزياء", slug: "fashion" },
+  { id: "3", name: "المنزل والمطبخ", slug: "home-kitchen" },
+  { id: "4", name: "الكتب", slug: "books" },
+  { id: "5", name: "الألعاب", slug: "toys" },
+  { id: "6", name: "الرياضة", slug: "sports" },
+  { id: "7", name: "الجمال", slug: "beauty" },
+  { id: "8", name: "الأطفال", slug: "baby" },
+  { id: "9", name: "الأثاث", slug: "furniture" },
+  { id: "10", name: "البقالة", slug: "grocery" },
+  { id: "11", name: "السيارات", slug: "automotive" },
+  { id: "12", name: "الحدائق", slug: "garden" },
 ];
-
-const iconMap: Record<string, CategoryNavItem["icon"]> = {
-  إلكترونيات: Smartphone,
-  ملابس: Shirt,
-  "مستحضرات تجميل": Sparkles,
-  ساعات: Watch,
-  حقائب: ShoppingBag,
-  رياضة: Dumbbell,
-  ألعاب: Gamepad2,
-  أحذية: Footprints,
-};
 
 export default function CategoryBar() {
   const [categories, setCategories] = useState<CategoryNavItem[]>(fallbackCategories);
@@ -46,9 +29,8 @@ export default function CategoryBar() {
         if (response.data.status && Array.isArray(response.data.data)) {
           const fetched: CategoryNavItem[] = response.data.data.map((cat: any) => ({
             id: String(cat.id),
-            name: cat.name,
+            name: typeof cat.name === 'object' ? (cat.name.ar || cat.name.en) : cat.name,
             slug: cat.id,
-            icon: iconMap[cat.name] || ShoppingBag,
           }));
           if (fetched.length > 0) setCategories(fetched);
         }
@@ -60,27 +42,21 @@ export default function CategoryBar() {
   }, []);
 
   return (
-    <section className="bg-surface py-8">
-      <div className="max-w-7xl mx-auto px-4">
-        <h2 className="section-title mb-6">تسوق حسب القسم</h2>
-        <div className="flex gap-4 md:gap-6 overflow-x-auto pb-4 scrollbar-hide">
-          {categories.map((category) => {
-            const Icon = category.icon || ShoppingBag;
-            return (
-              <Link
-                key={category.id}
-                href={`/products?category=${category.slug || category.id}`}
-                className="flex-shrink-0 group text-center"
-              >
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-primary-light flex items-center justify-center mb-2.5 group-hover:bg-primary group-hover:text-white text-primary transition-all duration-200 mx-auto">
-                  <Icon className="w-8 h-8 md:w-10 md:h-10" />
-                </div>
-                <p className="text-xs md:text-sm font-medium text-text group-hover:text-primary transition-colors whitespace-nowrap">
-                  {category.name}
-                </p>
-              </Link>
-            );
-          })}
+    <section className="bg-muted/30 border-b border-gray-100">
+      <div className="container mx-auto px-4">
+        <div className="flex gap-6 overflow-x-auto py-3 scrollbar-hide">
+          <Link href="/offers" className="text-sm font-bold whitespace-nowrap text-primary hover:text-primary/80 transition-colors">
+            عروضنا
+          </Link>
+          {categories.map((category) => (
+            <Link
+              key={category.id}
+              href={`/products?category=${category.slug || category.id}`}
+              className="text-sm font-medium whitespace-nowrap text-gray-700 hover:text-primary transition-colors"
+            >
+              {category.name}
+            </Link>
+          ))}
         </div>
       </div>
     </section>

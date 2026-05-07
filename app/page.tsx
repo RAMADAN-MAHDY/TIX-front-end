@@ -3,8 +3,8 @@ import HeroBanner from "@/components/HeroBanner";
 import CategoryBar from "@/components/CategoryBar";
 import FlashDeals from "@/components/FlashDeals";
 import BrandLogos from "@/components/BrandLogos";
-import ProductGrid from "@/components/ProductGrid";
-import { Shield, Truck, CreditCard, Headphones, RotateCcw, CheckCircle } from "lucide-react";
+import ProductCard from "@/components/ProductCard";
+import Features from "@/components/Features";
 import Link from "next/link";
 import type { CategoryNavItem } from "@/utils/Types/navigation";
 import type { ProductCardProps } from "@/utils/Types/products";
@@ -14,11 +14,11 @@ export const metadata: Metadata = {
   description: "منصة TIX للتجارة الإلكترونية في مصر - ملابس، إلكترونيات، مستحضرات تجميل",
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://admin.tix-eg.com";
 
 async function fetchProducts(): Promise<ProductCardProps[]> {
   try {
-    const res = await fetch(`${API_URL}/api/products?limit=8`, {
+    const res = await fetch(`${API_URL}/api/products?limit=10`, {
       next: { revalidate: 600 },
       headers: { "Accept-Language": "ar", Accept: "application/json" },
     });
@@ -44,7 +44,7 @@ async function fetchProducts(): Promise<ProductCardProps[]> {
 
 async function fetchCategoryProducts(
   categoryId: string | number,
-  limit: number = 4,
+  limit: number = 5,
 ): Promise<ProductCardProps[]> {
   try {
     const res = await fetch(`${API_URL}/api/products?category_id=${categoryId}&limit=${limit}`, {
@@ -80,7 +80,7 @@ async function fetchCategories(): Promise<CategoryNavItem[]> {
     if (!res.ok) return [];
     const data = await res.json();
     return Array.isArray(data.data)
-      ? data.data.slice(0, 3).map((cat: any) => ({
+      ? data.data.slice(0, 4).map((cat: any) => ({
           id: String(cat.id),
           name: typeof cat.name === "object" ? cat.name?.ar || cat.name?.en || "" : cat.name,
           slug: String(cat.id),
@@ -99,12 +99,12 @@ export default async function HomePage() {
     categories.map(async (cat) => ({
       id: cat.id,
       name: cat.name,
-      products: await fetchCategoryProducts(cat.id, 4),
+      products: await fetchCategoryProducts(cat.id, 5),
     })),
   );
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#FFFFFF" }}>
+    <div className="min-h-screen bg-white">
       {/* 1) Hero */}
       <HeroBanner />
 
@@ -115,100 +115,53 @@ export default async function HomePage() {
       <FlashDeals />
 
       {/* 4) Latest Products */}
-      <section style={{ maxWidth: 1200, margin: "0 auto", padding: "40px 20px" }}>
-        <div className="flex items-center justify-between" style={{ marginBottom: 24 }}>
-          <h2 className="section-title">أحدث المنتجات</h2>
+      <section className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold">أحدث المنتجات</h2>
           <Link
             href="/products"
-            style={{ color: "#FF8C00", fontSize: 14, fontWeight: 600, transition: "opacity 0.2s" }}
+            className="text-primary font-bold hover:underline"
           >
             عرض الكل ←
           </Link>
         </div>
-        <ProductGrid products={products} />
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          {products.map((product) => (
+            <ProductCard key={product.id} {...product} />
+          ))}
+        </div>
       </section>
 
-      {/* 5) Category Showcases — products per category */}
+      {/* 5) Category Showcases */}
       {categoryShowcases
         .filter((c) => c.products.length > 0)
         .map((cat) => (
           <section
             key={cat.id}
-            style={{ maxWidth: 1200, margin: "0 auto", padding: "20px 20px 40px" }}
+            className="container mx-auto px-4 py-8"
           >
-            <div className="flex items-center justify-between" style={{ marginBottom: 24 }}>
-              <h2 className="section-title">{cat.name}</h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold">{cat.name}</h2>
               <Link
                 href={`/products?category=${cat.id}`}
-                style={{ color: "#FF8C00", fontSize: 14, fontWeight: 600 }}
+                className="text-primary font-bold hover:underline"
               >
                 عرض الكل ←
               </Link>
             </div>
-            <ProductGrid products={cat.products} />
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              {cat.products.map((product) => (
+                <ProductCard key={product.id} {...product} />
+              ))}
+            </div>
           </section>
         ))}
 
       {/* 6) Brand Logos */}
       <BrandLogos />
 
-      {/* 7) Features Section — before Footer */}
-      <section style={{ maxWidth: 1200, margin: "0 auto", padding: "60px 20px" }}>
-        <div className="text-center" style={{ marginBottom: 40 }}>
-          <h2 style={{ fontSize: 32, fontWeight: 700, color: "#212121", marginBottom: 12 }}>
-            لماذا تتسوق من TIX؟
-          </h2>
-          <p style={{ fontSize: 16, color: "#666", maxWidth: 500, margin: "0 auto" }}>
-            نقدم لك أفضل تجربة تسوق إلكتروني مع ضمان الجودة والأمان
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {[
-            {
-              icon: Shield,
-              title: "جودة مضمونة",
-              desc: "جميع منتجاتنا أصلية 100% ومضمونة من المصنع",
-            },
-            { icon: Truck, title: "توصيل سريع", desc: "توصيل لجميع أنحاء مصر خلال 2-5 أيام عمل" },
-            { icon: CreditCard, title: "دفع آمن", desc: "طرق دفع متعددة وآمنة بتشفير كامل" },
-            {
-              icon: RotateCcw,
-              title: "إرجاع سهل",
-              desc: "إمكانية الإرجاع خلال 14 يوم من الاستلام",
-            },
-            { icon: Headphones, title: "دعم متواصل", desc: "فريق دعم فني متاح على مدار الساعة" },
-            {
-              icon: CheckCircle,
-              title: "أسعار تنافسية",
-              desc: "أفضل الأسعار مع عروض وخصومات مستمرة",
-            },
-          ].map((feature) => (
-            <div
-              key={feature.title}
-              className="card p-6 text-center group cursor-default"
-              style={{ borderRadius: 12 }}
-            >
-              <div
-                className="mx-auto flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all"
-                style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: 16,
-                  backgroundColor: "#F5F5F5",
-                  color: "#212121",
-                  marginBottom: 16,
-                }}
-              >
-                <feature.icon className="w-7 h-7" />
-              </div>
-              <h3 style={{ fontSize: 18, fontWeight: 600, color: "#212121", marginBottom: 8 }}>
-                {feature.title}
-              </h3>
-              <p style={{ fontSize: 14, color: "#666", lineHeight: 1.6 }}>{feature.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* 7) Features */}
+      <Features />
     </div>
   );
 }
