@@ -160,21 +160,180 @@ export default function CheckoutPage() {
   if (authState.isLoading) {
     return (
       <div className="max-w-5xl mx-auto px-4 py-12 flex justify-center">
-        <div className="animate-spin w-8 h-8 border-3 border-primary border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-3 border-black border-t-transparent rounded-full" />
       </div>
     );
   }
 
   return (
+<<<<<<< HEAD
+    <div className="max-w-5xl mx-auto px-4 py-6 md:py-10">
+      <h1 className="text-xl md:text-2xl font-bold mb-6">إتمام الشراء</h1>
+
+      {/* Steps */}
+      <div className="flex items-center justify-center gap-2 md:gap-4 mb-8">
+        {[
+          { icon: ShoppingBag, label: "السلة", done: true },
+          { icon: MapPin, label: "الشحن", done: true },
+          { icon: CreditCard, label: "الدفع", done: false },
+        ].map((step, i) => (
+          <div key={i} className="flex items-center gap-2">
+            <div
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${
+                step.done ? "bg-black/10 text-black" : "bg-surface-2 text-text-muted"
+              }`}
+            >
+              {step.done ? (
+                <CheckCircle className="w-3.5 h-3.5" />
+              ) : (
+                <step.icon className="w-3.5 h-3.5" />
+              )}
+              <span className="hidden sm:inline">{step.label}</span>
+            </div>
+            {i < 2 && <div className="w-8 h-px bg-border" />}
+=======
     <div className="flex flex-col min-h-screen bg-background" dir="rtl">
       <main className="flex-1">
         {/* Header */}
         <div className="bg-white border-b border-border">
           <div className="container mx-auto px-4 py-6">
             <h1 className="text-3xl font-bold">الدفع والتسليم</h1>
+>>>>>>> 2e3f91d30591c49ee6bfbc3912503d9b8ecc5328
           </div>
         </div>
 
+<<<<<<< HEAD
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Form */}
+        <div className="lg:col-span-2">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Shipping */}
+            <div className="card p-5">
+              <h3 className="font-bold flex items-center gap-2 mb-4">
+                <MapPin className="w-5 h-5 text-black" />
+                معلومات الشحن
+              </h3>
+
+              {/* City Dropdown */}
+              <div className="mb-4" ref={cityRef}>
+                <label className="text-sm font-medium mb-1.5 block">المدينة *</label>
+                <button
+                  type="button"
+                  className="input-field flex items-center justify-between !py-3"
+                  onClick={() => setCityOpen(!cityOpen)}
+                >
+                  <span className={selectedCity ? "text-text" : "text-text-faint"}>
+                    {selectedCity ? selectedCity.name : "اختر المدينة"}
+                  </span>
+                  {cityOpen ? (
+                    <ChevronUp className="w-4 h-4" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4" />
+                  )}
+                </button>
+                {cityOpen && (
+                  <div className="mt-1 bg-surface border border-border rounded-xl shadow-card-hover max-h-52 overflow-hidden z-20 relative">
+                    <div className="p-2 border-b border-divider">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={citySearch}
+                          onChange={(e) => setCitySearch(e.target.value)}
+                          placeholder="ابحث عن المدينة..."
+                          className="input-field !py-2 pr-3 pl-8 text-sm"
+                          autoFocus
+                        />
+                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-faint" />
+                      </div>
+                    </div>
+                    <div className="max-h-40 overflow-y-auto">
+                      {filteredCities.map((city) => (
+                        <button
+                          key={city.id}
+                          type="button"
+                          className={`w-full text-right px-4 py-2.5 text-sm hover:bg-surface-2 transition-colors flex justify-between ${
+                            selectedCity?.id === city.id ? "bg-gray-100 text-black font-bold" : ""
+                          }`}
+                          onClick={() => handleCitySelect(city)}
+                        >
+                          <span>{city.name}</span>
+                          <span className="text-text-muted">{formatCurrency(city.price)}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="mb-4">
+                <label className="text-sm font-medium mb-1.5 block">العنوان *</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  placeholder="العنوان بالتفصيل (8 أحرف على الأقل)"
+                  className="input-field"
+                  required
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="text-sm font-medium mb-1.5 block">رقم الهاتف *</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  placeholder="رقم الهاتف (أرقام فقط)"
+                  className="input-field"
+                  required
+                  dir="ltr"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">ملاحظات (اختياري)</label>
+                <textarea
+                  name="order_note"
+                  value={formData.order_note}
+                  onChange={handleInputChange}
+                  placeholder="أي ملاحظات خاصة بالطلب..."
+                  className="input-field !py-2"
+                  rows={3}
+                />
+              </div>
+            </div>
+
+            {/* Payment */}
+            <div className="card p-5">
+              <h3 className="font-bold flex items-center gap-2 mb-4">
+                <CreditCard className="w-5 h-5 text-black" />
+                طريقة الدفع
+              </h3>
+              <div className="space-y-2.5">
+                {paymentMethods.map((method) => (
+                  <label
+                    key={method.id}
+                    className={`flex items-center gap-3 p-3.5 border rounded-xl cursor-pointer transition-all ${
+                      paymentMethod === method.id
+                        ? "border-black bg-gray-50"
+                        : "border-border hover:border-text-faint"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="payment"
+                      value={method.id}
+                      checked={paymentMethod === method.id}
+                      onChange={() => setPaymentMethod(method.id)}
+                      className="w-4 h-4 text-black accent-black"
+                    />
+                    <div>
+                      <p className="text-sm font-medium">{method.name}</p>
+                      {method.description && (
+                        <p className="text-xs text-text-muted mt-0.5">{method.description}</p>
+=======
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
@@ -198,6 +357,7 @@ export default function CheckoutPage() {
                       </div>
                       {step < 3 && (
                         <div className={`h-1 flex-1 mr-2 ${step < currentStep ? 'bg-[#000]' : 'bg-gray-300'}`}></div>
+>>>>>>> 2e3f91d30591c49ee6bfbc3912503d9b8ecc5328
                       )}
                     </div>
                   ))}
@@ -420,6 +580,15 @@ export default function CheckoutPage() {
               <div className="bg-white rounded-lg border border-border p-6 sticky top-24">
                 <h2 className="text-lg font-bold mb-4">ملخص الطلب</h2>
 
+<<<<<<< HEAD
+        {/* Order Summary */}
+        <div className="lg:col-span-1">
+          <div className="card p-5 sticky top-24">
+            <h3 className="font-bold flex items-center gap-2 mb-4">
+              <ShoppingBag className="w-5 h-5 text-black" />
+              ملخص الطلب
+            </h3>
+=======
                 <div className="space-y-3 mb-4 pb-4 border-b border-border text-black">
                   {cartState.items.map((item) => (
                     <div key={item.id} className="flex justify-between text-sm">
@@ -434,6 +603,7 @@ export default function CheckoutPage() {
                     <p className="text-xs text-gray-400">لا توجد منتجات في السلة</p>
                   )}
                 </div>
+>>>>>>> 2e3f91d30591c49ee6bfbc3912503d9b8ecc5328
 
                 {summary && (
                   <div className="space-y-4 text-black">
@@ -466,7 +636,26 @@ export default function CheckoutPage() {
                     </p>
                   </div>
                 )}
+<<<<<<< HEAD
+                {summary.discount > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-text-muted">الخصم</span>
+                    <span className="text-success">-{formatCurrency(summary.discount)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between font-bold text-base pt-3 border-t border-divider">
+                  <span>الإجمالي</span>
+                  <span className="text-black">{formatCurrency(summary.total)}</span>
+                </div>
               </div>
+            )}
+
+            <div className="flex items-center gap-2 text-text-muted text-xs mt-4 p-3 bg-surface-2 rounded-xl">
+              <Truck className="w-4 h-4 text-black flex-shrink-0" />
+              <span>التوصيل خلال 2-5 أيام عمل</span>
+=======
+              </div>
+>>>>>>> 2e3f91d30591c49ee6bfbc3912503d9b8ecc5328
             </div>
           </div>
         </div>
