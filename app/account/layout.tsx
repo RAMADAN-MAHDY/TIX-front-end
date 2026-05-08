@@ -7,7 +7,7 @@ import { useAuth } from '@/context/AuthContext'
 const sidebarLinks = [
   { href: '/account', label: 'بيانات شخصية', icon: User },
   { href: '/account/orders', label: 'طلباتي', icon: Package },
-  { href: '/account/wishlist', label: 'المفضلة', icon: Heart },
+  { href: '/wishlist', label: 'المفضلة', icon: Heart },
 ]
 
 export default function AccountLayout({ children }: { children: React.ReactNode }) {

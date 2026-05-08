@@ -5,6 +5,7 @@ const protectedPaths = [
   '/account',
   '/checkout',
   '/cart',
+  '/wishlist',
 ]
 
 export function middleware(request: NextRequest) {

@@ -179,7 +179,7 @@ export default function Header() {
                 </Button>
               </Link>
             )}
-            <Link href="/account/wishlist">
+            <Link href="/wishlist">
               <Button variant="ghost" size="icon" className="text-black hover:bg-gray-100">
                 <Heart className="h-5 w-5" />
               </Button>

@@ -113,11 +113,25 @@ function ProductsContent() {
             reviewsCount: p.reviews?.count || 0,
           }));
 
+<<<<<<< HEAD
           // Client-side filtering as a fallback
           mapped = mapped.filter((p: any) => p.price >= minP && p.price <= maxP);
+=======
+          // Client-side filtering as a fallback/safeguard
+          mapped = mapped.filter((p: ProductCardProps) => p.price >= priceRange[0] && p.price <= priceRange[1]);
+>>>>>>> 2e3f91d30591c49ee6bfbc3912503d9b8ecc5328
 
           if (selectedRatings.length > 0) {
-            mapped = mapped.filter((p: any) => selectedRatings.some(r => p.rating >= r));
+            mapped = mapped.filter((p: ProductCardProps) => selectedRatings.some(r => (p.rating ?? 0) >= r));
+          }
+
+          // Client-side sorting as a fallback/safeguard
+          if (sortBy === "price_low") {
+            mapped.sort((a: ProductCardProps, b: ProductCardProps) => a.price - b.price);
+          } else if (sortBy === "price_high") {
+            mapped.sort((a: ProductCardProps, b: ProductCardProps) => b.price - a.price);
+          } else if (sortBy === "rating") {
+            mapped.sort((a: ProductCardProps, b: ProductCardProps) => (b.rating || 0) - (a.rating || 0));
           }
 
           setProducts(mapped);
