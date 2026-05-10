@@ -510,8 +510,8 @@ export default function ProductDetailClient({ productId }: { productId: string }
                 </div>
               )}
 
-              {/* Trust Badges */}
-              <div className="mt-6 border-t pt-6">
+              {/* Trust Badges - Restored Original Style with extra padding */}
+              <div className="mt-12 mb-12 border-t pt-8">
                 <h3 className="font-semibold text-sm mb-4">معلومات التوصيل والدفع</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-start gap-3">
