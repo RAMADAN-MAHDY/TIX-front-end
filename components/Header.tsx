@@ -11,6 +11,7 @@ import {
 import api from '@/lib/api'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import CategoryBar from './CategoryBar'
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -88,19 +89,6 @@ export default function Header() {
             <span className="text-2xl font-bold text-black">TIX</span>
           </Link>
 
-          {/* Desktop Nav beside logo */}
-          <nav className="hidden lg:flex items-center gap-1 flex-shrink-0">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="relative px-3 py-2 text-sm font-medium text-gray-700 hover:text-black transition-colors after:content-[''] after:absolute after:right-0 after:bottom-0 after:h-0.5 after:w-0 after:bg-black after:transition-all after:duration-300 after:ease-out hover:after:w-full"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
           {/* Search Bar in the middle */}
           <div ref={searchRef} className="hidden md:flex flex-1 max-w-xl relative">
             <div className="relative w-full">
@@ -164,7 +152,7 @@ export default function Header() {
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="w-full text-right px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2 text-red-500 border-top border-gray-100"
+                      className="w-full text-right px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2 text-red-600 border-top border-gray-100"
                     >
                       <LogOut className="h-4 w-4" />
                       تسجيل الخروج
@@ -194,13 +182,6 @@ export default function Header() {
                 )}
               </Button>
             </Link>
-            {/* Mobile Menu Toggle */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-md hover:bg-gray-100"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
           </div>
         </div>
 
@@ -217,34 +198,8 @@ export default function Header() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <nav className="md:hidden border-t border-gray-100 py-4 animate-in slide-in-from-top duration-300">
-            <div className="flex flex-col gap-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-4 py-3 text-base font-medium text-gray-800 hover:bg-gray-50 rounded-lg"
-                >
-                  {link.label}
-                </Link>
-              ))}
-              {!authState.isAuthenticated && (
-                <Link
-                  href="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="mx-4 mt-4 bg-black text-white text-center py-3 rounded-lg font-bold hover:bg-gray-900 transition-colors"
-                >
-                  تسجيل الدخول
-                </Link>
-              )}
-            </div>
-          </nav>
-        )}
       </div>
+      <CategoryBar />
     </header>
   )
 }

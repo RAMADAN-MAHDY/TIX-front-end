@@ -28,7 +28,7 @@
 
     /* Semantic */
     --color-success: #4caf50;
-    --color-error: #f44336;
+    --color-error: #e7010b;
     --color-warning: #ff8c00;
     --color-info: #2196f3;
 
@@ -259,7 +259,7 @@
   }
   .badge-error {
     @apply badge;
-    background-color: #f44336;
+    background-color: #e7010b;
     color: #ffffff;
   }
   .badge-success {
