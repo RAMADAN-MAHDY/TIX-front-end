@@ -45,6 +45,11 @@ export default function Footer() {
                   من نحن
                 </Link>
               </li>
+              <li>
+                <Link href="/contact" className="hover:text-white transition-colors">
+                  تواصل معنا
+                </Link>
+              </li>
             </ul>
           </div>
 

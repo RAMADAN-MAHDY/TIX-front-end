@@ -198,7 +198,7 @@ export default function CartPage() {
                         </div>
                         <button
                           onClick={() => handleRemove(item.id)}
-                          className="mr-auto text-red-500 hover:text-red-600 transition-colors p-1"
+                          className="mr-auto text-red-600 hover:text-red-700 transition-colors p-1"
                           aria-label="حذف"
                         >
                           <Trash2 className="w-5 h-5" />
@@ -251,30 +251,27 @@ export default function CartPage() {
                               setCouponCode(e.target.value);
                               setCouponError("");
                             }}
-                            className="text-sm h-10 pr-3"
+                            className="bg-gray-50 border-gray-200 focus-visible:ring-primary/20 focus-visible:border-primary pr-10"
                           />
-                          {couponCode && (
+                          <Tag className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                          {summary?.coupon && (
                             <button
-                              onClick={() => {
-                                setCouponCode("");
-                                setCouponError("");
-                              }}
-                              className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
+                              onClick={handleRemoveCoupon}
+                              className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-600"
                             >
-                              <X className="w-3.5 h-3.5" />
+                              <X className="w-4 h-4" />
                             </button>
                           )}
                         </div>
                         <Button
-                          variant="outline"
                           onClick={handleApplyCoupon}
                           disabled={isApplying || !couponCode.trim()}
-                          className="h-10 px-4 font-bold border-gray-200"
+                          className="bg-black text-white hover:bg-gray-800 px-6"
                         >
-                          {isApplying ? "..." : "تطبيق"}
+                          تطبيق
                         </Button>
                       </div>
-                      {couponError && <p className="text-red-500 text-xs mt-1">{couponError}</p>}
+                      {couponError && <p className="text-red-600 text-xs mt-1">{couponError}</p>}
 
                       <div className="flex justify-between font-bold text-lg border-t border-gray-100 pt-4 mt-2 text-gray-900">
                         <span>الإجمالي</span>

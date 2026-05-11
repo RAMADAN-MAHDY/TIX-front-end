@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import HeroBanner from "@/components/HeroBanner";
-import CategoryBar from "@/components/CategoryBar";
 import FlashDeals from "@/components/FlashDeals";
-import BrandLogos from "@/components/BrandLogos";
 import ProductCard from "@/components/ProductCard";
 import Features from "@/components/Features";
 import Link from "next/link";
@@ -108,10 +106,7 @@ export default async function HomePage() {
       {/* 1) Hero */}
       <HeroBanner />
 
-      {/* 2) Category Nav */}
-      <CategoryBar />
-
-      {/* 3) Flash Deals */}
+      {/* 2) Flash Deals */}
       <FlashDeals />
 
       {/* 4) Latest Products */}
@@ -157,10 +152,6 @@ export default async function HomePage() {
           </section>
         ))}
 
-      {/* 6) Brand Logos */}
-      <BrandLogos />
-
-      {/* 7) Features */}
       <Features />
     </div>
   );

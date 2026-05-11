@@ -16,7 +16,7 @@ import {
 import api from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { t } from "@/utils/helpers";
+import { t, formatCurrency } from "@/utils/helpers";
 import type { CategoryNavItem } from "@/utils/Types/navigation";
 import type { ProductCardProps } from "@/utils/Types/products";
 
@@ -113,13 +113,8 @@ function ProductsContent() {
             reviewsCount: p.reviews?.count || 0,
           }));
 
-<<<<<<< HEAD
-          // Client-side filtering as a fallback
-          mapped = mapped.filter((p: any) => p.price >= minP && p.price <= maxP);
-=======
           // Client-side filtering as a fallback/safeguard
           mapped = mapped.filter((p: ProductCardProps) => p.price >= priceRange[0] && p.price <= priceRange[1]);
->>>>>>> 2e3f91d30591c49ee6bfbc3912503d9b8ecc5328
 
           if (selectedRatings.length > 0) {
             mapped = mapped.filter((p: ProductCardProps) => selectedRatings.some(r => (p.rating ?? 0) >= r));
@@ -383,10 +378,10 @@ function ProductsContent() {
 
                         <div className="mt-auto">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="text-lg font-bold text-gray-900">{product.price.toLocaleString("ar-EG")} ج.م</span>
+                            <span className="text-lg font-bold text-gray-900">{formatCurrency(product.price)}</span>
                             {(product.originalPrice ?? 0) > product.price && (
                               <span className="text-sm text-gray-400 line-through">
-                                {(product.originalPrice ?? 0).toLocaleString("ar-EG")}
+                                {formatCurrency(product.originalPrice ?? 0)}
                               </span>
                             )}
                           </div>
