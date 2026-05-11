@@ -55,7 +55,7 @@ export default function CategoryBar() {
   };
 
   return (
-    <section className="bg-muted/30 border-b border-gray-100">
+    <section className="bg-white border-b border-gray-100">
       <div className="container mx-auto px-4 relative">
         <button
           type="button"

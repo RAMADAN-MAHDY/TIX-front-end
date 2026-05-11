@@ -68,7 +68,7 @@ export default function OrderDetailsPage({ params }: { params: Promise<{ id: str
           </div>
           <div>
             <span className="text-text-muted">التاريخ:</span>{" "}
-            <span>{new Date(order.created_at).toLocaleDateString("ar-EG")}</span>
+            <span>{new Date(order.created_at).toLocaleDateString("en-US")}</span>
           </div>
         </div>
         {items.length > 0 && (

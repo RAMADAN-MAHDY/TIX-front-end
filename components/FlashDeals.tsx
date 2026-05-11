@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import ProductCard from "./ProductCard";
 import { Zap, ChevronRight, ChevronLeft } from "lucide-react";
 import api from "@/lib/api";
@@ -79,28 +80,28 @@ export default function FlashDeals() {
   if (products.length === 0) return null;
 
   return (
-    <section className="bg-[#0a0a0a] py-12 overflow-hidden border-y border-red-900/30">
+    <section className="bg-red-600 py-12 overflow-hidden border-y border-red-700">
       <div className="container mx-auto px-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-10">
           <div className="flex items-center gap-4">
-            <div className="bg-red-600 p-2.5 rounded-xl rotate-12 shadow-[0_0_20px_rgba(220,38,38,0.4)]">
+            <div className="bg-black/20 backdrop-blur-md p-2.5 rounded-xl rotate-12 border border-white/10 shadow-2xl">
               <Zap className="w-6 h-6 fill-white text-white" />
             </div>
             <div>
               <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">عروض الفلاش</h2>
-              <p className="text-red-500 text-xs md:text-sm font-medium mt-0.5">خصومات تصل إلى 70% لفترة محدودة</p>
+              <p className="text-white/90 text-xs md:text-sm font-bold mt-0.5">خصومات تصل إلى 70% لفترة محدودة</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-4 bg-zinc-900/50 p-2 px-4 rounded-2xl border border-zinc-800/50">
-            <span className="text-zinc-400 text-xs font-bold uppercase tracking-widest hidden sm:inline">ينتهي في</span>
+          <div className="flex items-center gap-4 bg-white/10 backdrop-blur-sm p-2 px-4 rounded-2xl border border-white/20">
+            <span className="text-white text-xs font-bold uppercase tracking-widest hidden sm:inline">ينتهي في</span>
             <div className="flex gap-2.5">
               {[timeLeft.hours, timeLeft.minutes, timeLeft.seconds].map((v, i) => (
                 <div key={i} className="flex items-center gap-1.5">
-                  <div className="bg-zinc-800 text-white w-11 h-11 flex items-center justify-center rounded-xl font-mono font-bold text-xl border border-zinc-700 shadow-lg">
+                  <div className="bg-black/20 backdrop-blur-md text-white w-11 h-11 flex items-center justify-center rounded-xl font-mono font-bold text-xl border border-white/20 shadow-xl">
                     {pad(v)}
                   </div>
-                  {i < 2 && <span className="text-red-600 font-black animate-pulse">:</span>}
+                  {i < 2 && <span className="text-white font-black animate-pulse">:</span>}
                 </div>
               ))}
             </div>
@@ -134,7 +135,7 @@ export default function FlashDeals() {
             {products.map((product) => (
               <SwiperSlide key={product.id}>
                 <div className="h-full py-2">
-                  <ProductCard {...product} />
+                  <ProductCard {...product} isFlashDeal={true} />
                 </div>
               </SwiperSlide>
             ))}
@@ -147,6 +148,17 @@ export default function FlashDeals() {
           <button className="swiper-button-next-custom absolute -left-4 md:-left-6 top-1/2 -translate-y-1/2 z-30 bg-white text-black p-2 md:p-2.5 rounded-full shadow-2xl hover:bg-gray-100 flex items-center justify-center border border-zinc-200 transition-all active:scale-90">
             <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
           </button>
+        </div>
+
+        {/* View All Offers Button */}
+        <div className="mt-10 text-center">
+          <Link 
+            href="/offers" 
+            className="inline-flex items-center gap-2 bg-white text-red-600 px-8 py-3 rounded-xl font-bold hover:bg-gray-50 transition-all shadow-xl hover:scale-105"
+          >
+          عرض المزيد
+            <ChevronLeft className="w-4 h-4" />
+          </Link>
         </div>
       </div>
     </section>

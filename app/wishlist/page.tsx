@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { formatCurrency } from '@/utils/helpers'
+import { formatCurrency, formatPrice } from '@/utils/helpers'
 
 export default function WishlistPage() {
   const { items, isLoading, refreshWishlist } = useWishlist()
@@ -89,15 +89,15 @@ export default function WishlistPage() {
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                       {item.discount > 0 && (
-                        <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm z-10">
+                        <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold shadow-sm z-10">
                           {item.discount}%-
                         </div>
                       )}
                       <button
                         onClick={() => {}} 
-                        className="absolute top-2 left-2 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-red-500 hover:scale-110 transition-all z-10"
+                        className="absolute top-2 left-2 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-red-600 hover:scale-110 transition-all z-10"
                       >
-                        <Heart className="w-4 h-4 fill-red-500" />
+                        <Heart className="w-4 h-4 fill-red-600" />
                       </button>
                     </div>
 
@@ -116,7 +116,7 @@ export default function WishlistPage() {
                               />
                             ))}
                           </div>
-                          <span className="text-[10px] text-gray-400 mr-1">({(item.reviews || 0).toLocaleString('ar-EG')})</span>
+                          <span className="text-[10px] text-gray-400 mr-1">({formatPrice(item.reviews || 0)})</span>
                         </div>
                       </div>
 
@@ -137,7 +137,7 @@ export default function WishlistPage() {
                         </Button>
                         <button
                           onClick={() => {}} 
-                          className="w-9 h-9 flex items-center justify-center border border-gray-100 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                          className="w-9 h-9 flex items-center justify-center border border-gray-100 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
                           title="حذف من المفضلة"
                         >
                           <Trash2 className="w-4 h-4" />

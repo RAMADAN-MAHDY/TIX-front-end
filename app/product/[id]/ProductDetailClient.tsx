@@ -17,13 +17,14 @@ import {
   CreditCard,
   MessageCircle,
   HelpCircle,
+  Plus as PlusIcon,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import api from "@/lib/api";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { useWishlist } from "@/context/WishlistContext";
-import { formatCurrency, calculateDiscount, t } from "@/utils/helpers";
+import { formatCurrency, formatPrice, calculateDiscount, t } from "@/utils/helpers";
 import ProductCard from "@/components/ProductCard";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -45,6 +46,7 @@ export default function ProductDetailClient({ productId }: { productId: string }
   const [complementaryProducts, setComplementaryProducts] = useState<any[]>([]);
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
   const [expandedAccordion, setExpandedAccordion] = useState<string | null>(null);
+  const [selectedBoughtTogether, setSelectedBoughtTogether] = useState<string[]>([]);
 
   const { addToCart } = useCart();
   const { state: authState } = useAuth();
@@ -103,12 +105,10 @@ export default function ProductDetailClient({ productId }: { productId: string }
   }, [productId]);
 
   const handleAddToCart = async () => {
-    /*
     if (!authState.isAuthenticated) {
-      toast.info("سجّل الدخول أولاً");
+      toast.info("سجّل الدخول أولاً لإضافة المنتجات للسلة");
       return;
     }
-    */
     try {
       setAddingToCart(true);
       await addToCart(product!.id, quantity, selectedItem?.id || null);
@@ -121,18 +121,60 @@ export default function ProductDetailClient({ productId }: { productId: string }
   };
 
   const handleToggleWishlist = async () => {
-    /*
     if (!authState.isAuthenticated) {
-      toast.info("سجّل الدخول أولاً");
+      toast.info("سجّل الدخول أولاً لإضافة المنتجات للمفضلة");
       return;
     }
-    */
     try {
       await toggleWishlist(product!.id);
       fetchProduct();
     } catch {
       toast.error("خطأ");
     }
+  };
+
+  const handleAddBoughtTogether = async () => {
+    if (!authState.isAuthenticated) {
+      toast.info("سجّل الدخول أولاً لإضافة المنتجات للسلة");
+      return;
+    }
+    try {
+      setAddingToCart(true);
+      // Add main product if selected
+      if (selectedBoughtTogether.includes(String(product.id))) {
+        await addToCart(product.id, 1, selectedItem?.id || null);
+      }
+      // Add other selected products
+      for (const prodId of selectedBoughtTogether) {
+        if (prodId !== String(product.id)) {
+          await addToCart(Number(prodId), 1);
+        }
+      }
+      toast.success("تم إضافة المنتجات المختارة للسلة");
+    } catch (error: any) {
+      toast.error("حدث خطأ أثناء إضافة المنتجات");
+    } finally {
+      setAddingToCart(false);
+    }
+  };
+
+  const toggleBoughtTogether = (id: string) => {
+    setSelectedBoughtTogether(prev => 
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
+  const calculateTotalBoughtTogether = () => {
+    let total = 0;
+    if (selectedBoughtTogether.includes(String(product.id))) {
+      total += currentPrice;
+    }
+    complementaryProducts.forEach(p => {
+      if (selectedBoughtTogether.includes(String(p.id))) {
+        total += p.price;
+      }
+    });
+    return total;
   };
 
   const handleReviewSubmit = async (e: React.FormEvent) => {
@@ -214,53 +256,59 @@ export default function ProductDetailClient({ productId }: { productId: string }
             <span>{t(product.name)}</span>
           </div>
 
-          {/* Store Info */}
-          <div className="mb-2 text-sm text-gray-500 flex items-center gap-1 justify-end">
-            <span>يُباع بواسطة:</span>
-            <span className="text-red-600 hover:underline font-semibold cursor-pointer">
-              {product.vendor?.store_name ? t(product.vendor.store_name) : "متجر TIX"}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
             {/* Left Column - Image Gallery */}
-            <div className="lg:col-span-2 flex flex-col">
-              <div className="bg-gray-50 rounded-lg overflow-hidden mb-4 flex-shrink-0">
-                <div className="w-full aspect-[4/5] lg:aspect-square flex items-center justify-center relative">
+            <div className="lg:col-span-5 flex flex-col">
+              <div className="bg-white border border-gray-100 rounded-xl overflow-hidden mb-4 flex-shrink-0 shadow-sm">
+                <div className="w-full aspect-[4/5] flex items-center justify-center relative bg-white">
                   <Image
                     src={images[selectedImageIdx]}
                     alt={t(product.name)}
                     fill
+                    priority
                     className="object-contain"
+                    sizes="(max-width: 1024px) 100vw, 40vw"
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-4 gap-2 flex-shrink-0">
+              <div className="grid grid-cols-5 gap-2 flex-shrink-0">
                 {images.map((img: string, idx: number) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedImageIdx(idx)}
-                    className={`border-2 rounded-lg overflow-hidden transition-all aspect-square relative ${
-                      selectedImageIdx === idx ? 'border-black' : 'border-gray-200 hover:border-gray-400'
+                    className={`border-2 rounded-lg overflow-hidden transition-all aspect-square relative bg-white ${
+                      selectedImageIdx === idx ? 'border-black' : 'border-gray-100 hover:border-gray-300'
                     }`}
                   >
-                    <Image src={img} alt="" fill className="object-contain" />
+                    <Image 
+                      src={img} 
+                      alt="" 
+                      fill 
+                      className="object-contain p-1" 
+                    />
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Right Column - Product Info */}
-            <div>
-              <h1 className="text-2xl font-bold mb-1">{t(product.name)}</h1>
-
+            <div className="lg:col-span-7">
               {/* Brand Display */}
               {product.brand && (
-                <div className="mb-3">
-                  <span className="text-sm text-gray-500">العلامة التجارية: </span>
+                <div className="mb-1">
                   <span className="text-sm font-bold text-red-600">{product.brand}</span>
                 </div>
               )}
+
+              <h1 className="text-2xl font-bold mb-1">{t(product.name)}</h1>
+
+              {/* Store Info */}
+              <div className="mb-2 text-sm text-gray-500 flex items-center gap-1">
+                <span>يُباع بواسطة:</span>
+                <span className="text-red-600 hover:underline font-semibold cursor-pointer">
+                  {product.vendor?.store_name ? t(product.vendor.store_name) : "متجر TIX"}
+                </span>
+              </div>
 
               {/* Rating */}
               <div className="flex items-center gap-2 mb-4">
@@ -274,27 +322,20 @@ export default function ProductDetailClient({ productId }: { productId: string }
                 </div>
                 <span className="text-sm font-semibold">{avgRating.toFixed(1)}</span>
                 <Link href="#reviews" className="text-red-600 hover:underline text-sm">
-                  ({reviewCount.toLocaleString('ar-EG')} تقييم)
+                  ({formatPrice(reviewCount)} تقييم)
                 </Link>
               </div>
 
               {/* Price */}
               <div className="flex items-center gap-3 mb-2">
-                <span className="text-3xl font-bold">{currentPrice.toLocaleString("ar-EG")} ج.م</span>
+                <span className="text-3xl font-bold">{formatCurrency(currentPrice)}</span>
                 {originalPrice > currentPrice && (
                   <>
-                    <span className="text-lg text-gray-400 line-through">{originalPrice.toLocaleString("ar-EG")} ج.م</span>
+                    <span className="text-lg text-gray-400 line-through">{formatCurrency(originalPrice)}</span>
                     <span className="bg-red-100 text-red-700 px-2 py-1 rounded text-sm font-bold">-{discountPct}%</span>
                   </>
                 )}
               </div>
-
-              {/* Short Description */}
-              {product.short_description && (
-                <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-                  {t(product.short_description)}
-                </p>
-              )}
 
               {/* Stock Status */}
               <div className="mb-6">
@@ -407,15 +448,77 @@ export default function ProductDetailClient({ productId }: { productId: string }
                 <span className="text-sm font-semibold">{wishlisted ? 'مضاف للمفضلة' : 'أضف للمفضلة'}</span>
               </button>
 
-              {/* Trust Badges */}
-              <div className="mt-6 border-t pt-6">
+              {/* Frequently Bought Together Section - Larger Cards */}
+              {complementaryProducts.length > 0 && (
+                <div className="mt-8 p-6 border border-gray-200 rounded-2xl bg-white shadow-sm">
+                  <h3 className="text-base font-bold mb-6 text-gray-900">يباع معها أيضاً</h3>
+                  
+                  <div className="flex items-start gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                    {/* Main Product */}
+                    <div className="flex-shrink-0 w-32 flex flex-col items-center gap-3">
+                      <div className="relative w-32 h-32 bg-gray-50 rounded-xl border border-gray-100 overflow-hidden group">
+                        <input 
+                          type="checkbox" 
+                          checked={selectedBoughtTogether.includes(String(product.id))}
+                          onChange={() => toggleBoughtTogether(String(product.id))}
+                          className="absolute top-2 right-2 z-10 w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer shadow-sm"
+                        />
+                        <Image src={images[0]} alt="" fill className="object-contain p-1" />
+                      </div>
+                      <div className="text-center w-full">
+                        <p className="text-[11px] font-bold text-gray-900 leading-tight line-clamp-2 mb-1 h-7">{t(product.name)}</p>
+                        <p className="text-xs font-black text-gray-900">{formatCurrency(currentPrice)}</p>
+                      </div>
+                    </div>
+
+                    {complementaryProducts.slice(0, 3).map((prod) => (
+                      <div key={prod.id} className="flex items-start gap-3">
+                        <div className="flex items-center justify-center h-32 text-gray-300">
+                          <PlusIcon className="w-4 h-4" />
+                        </div>
+                        <div className="flex-shrink-0 w-32 flex flex-col items-center gap-3">
+                          <div className="relative w-32 h-32 bg-gray-50 rounded-xl border border-gray-100 overflow-hidden group">
+                            <input 
+                              type="checkbox" 
+                              checked={selectedBoughtTogether.includes(String(prod.id))}
+                              onChange={() => toggleBoughtTogether(String(prod.id))}
+                              className="absolute top-2 right-2 z-10 w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer shadow-sm"
+                            />
+                            <Image src={prod.image} alt="" fill className="object-contain p-1" />
+                          </div>
+                          <div className="text-center w-full">
+                            <p className="text-[11px] font-bold text-gray-900 leading-tight line-clamp-2 mb-1 h-7">{t(prod.name)}</p>
+                            <p className="text-xs font-black text-gray-900">{formatCurrency(prod.price)}</p>
+                            <div className="mt-1">
+                              <span className="bg-yellow-300 text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm">إكسبرس</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-6 pt-6 border-t border-gray-100">
+                    <Button
+                      onClick={handleAddBoughtTogether}
+                      disabled={selectedBoughtTogether.length === 0 || addingToCart}
+                      className="w-full bg-white text-black border border-black hover:bg-gray-50 h-12 rounded-xl font-bold text-base transition-all focus:ring-0 focus-visible:ring-0 shadow-sm"
+                    >
+                      اشتري {selectedBoughtTogether.length} معاً بسعر {formatCurrency(calculateTotalBoughtTogether())}
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Trust Badges - Restored Original Style with extra padding */}
+              <div className="mt-12 mb-12 border-t pt-8">
                 <h3 className="font-semibold text-sm mb-4">معلومات التوصيل والدفع</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-start gap-3">
                     <Truck className="w-5 h-5 text-black flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="font-semibold text-sm">شحن سريع</p>
-                      <p className="text-xs text-gray-500">توصيل خلال 2-5 أيام</p>
+                      <p className="text-xs text-gray-500">توصيل خلال 1-3 أيام</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -596,7 +699,7 @@ export default function ProductDetailClient({ productId }: { productId: string }
                           ))}
                           <span className="text-xs text-gray-500">({prod.reviewsCount})</span>
                         </div>
-                        <p className="text-base font-bold">{prod.price.toLocaleString("ar-EG")} ج.م</p>
+                        <p className="text-base font-bold">{formatCurrency(prod.price)}</p>
                       </div>
                     </Card>
                   </Link>
@@ -616,7 +719,7 @@ export default function ProductDetailClient({ productId }: { productId: string }
                       <div className="relative w-full h-40">
                         <Image src={prod.image} alt={prod.name} fill className="object-cover" />
                         {prod.discount > 0 && (
-                          <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-bold">
+                          <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-bold">
                             -{prod.discount}%
                           </div>
                         )}
@@ -637,10 +740,10 @@ export default function ProductDetailClient({ productId }: { productId: string }
                           <span className="text-xs text-gray-500">({prod.reviewsCount})</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <p className="text-base font-bold">{prod.price.toLocaleString("ar-EG")} ج.م</p>
+                          <p className="text-base font-bold">{formatCurrency(prod.price)}</p>
                           {prod.originalPrice > prod.price && (
                             <p className="text-xs text-gray-400 line-through">
-                              {prod.originalPrice.toLocaleString("ar-EG")} ج.م
+                              {formatCurrency(prod.originalPrice)}
                             </p>
                           )}
                         </div>

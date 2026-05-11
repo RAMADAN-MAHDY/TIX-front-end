@@ -29,8 +29,8 @@ export default function Features() {
   ]
 
   return (
-    <section className="border-y border-gray-100 bg-white">
-      <div className="container mx-auto px-4 py-8">
+    <section className="py-16 border-y border-gray-100 bg-white">
+      <div className="container mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 divide-x-0 md:divide-x md:divide-x-reverse divide-gray-100">
           {features.map((feature, idx) => (
             <div key={idx} className="flex flex-col md:flex-row items-center md:items-start text-center md:text-right gap-4 px-4">

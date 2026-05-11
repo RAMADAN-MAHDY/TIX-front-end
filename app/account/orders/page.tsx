@@ -76,7 +76,7 @@ export default function OrdersPage() {
               <div>
                 <p className="text-sm font-medium">طلب #{order.id}</p>
                 <p className="text-xs text-text-muted mt-0.5">
-                  {new Date(order.created_at).toLocaleDateString("ar-EG", {
+                  {new Date(order.created_at).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",

@@ -7,4 +7,5 @@ export interface ProductCardProps {
   rating?: number;
   reviewsCount?: number;
   discount?: number;
+  isFlashDeal?: boolean;
 }

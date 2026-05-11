@@ -6,11 +6,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatPrice(price: number): string {
-  return price.toLocaleString("ar-EG");
+  return price.toLocaleString("en-US");
 }
 
 export function formatCurrency(price: number): string {
-  return `${formatPrice(price)} ج.م`;
+  return `${formatPrice(price)} EGP`;
 }
 
 export function calculateDiscount(originalPrice: number, currentPrice: number): number {
